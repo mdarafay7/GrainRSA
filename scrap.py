@@ -13,7 +13,7 @@ table=soup.find("table")
 table_body = table.find('tbody')
 rows = table_body.find_all('tr')
 string=''
-db = pymysql.connect(host="localhost",user="root",password="RAFay786$",db="TESTDB" )
+db = pymysql.connect(host="localhost",user="root",password="test123",db="TESTDB" )
 cursor = db.cursor()
 cursor.execute("DROP TABLE IF EXISTS SOYBEAN");
 sql = """CREATE TABLE SOYBEAN (

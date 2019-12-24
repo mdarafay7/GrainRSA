@@ -14,12 +14,18 @@ import requests
 
 
 
+def str_to_float_jse(str):
+    return float(re.sub(r'\s+','',str.replace(",",".")))
+
+
 def float_conv(value):
     try:
         value="{:.2f}".format((float)(value))
         return value
     except:
         a=1
+
+
 
 
 
@@ -38,7 +44,8 @@ def Inputter(line_count,SAFEX_SHEET,outBook,db,inBook,add):
             #print(info)
             today = date.today()
             today_str=today.strftime('%m/%d/%Y')
-            todays_month=today_str[0:2]
+            todays_month=int(today_str[0:2])-1
+            todays_month=str(todays_month)
             today_str='2019-'+todays_month+'-'+str(add)
             if(info[0]=='WHITE MAIZE FUTURE'):
                 for i2 in range(0,20):

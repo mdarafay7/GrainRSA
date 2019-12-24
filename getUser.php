@@ -19,10 +19,8 @@ th {text-align: left;}
 
 <?php
 
-echo "<p>SSSSSSS</p>"
-$q = intval($_GET['q']);
 
-$con = mysqli_connect('localhost','peter','abc123','my_db');
+$con = mysqli_connect('localhost','abdo','test123','TESTDB');
 if (!$con) {
     die('Could not connect: ' . mysqli_error($con));
 }
@@ -33,19 +31,25 @@ $result = mysqli_query($con,$sql);
 
 echo "<table>
 <tr>
-<th>Firstname</th>
-<th>Lastname</th>
-<th>Age</th>
-<th>Hometown</th>
-<th>Job</th>
+<th>DATE</th>
+<th>ID</th>
+<th>SETTLEMENT</th>
+<th>HIGH</th>
+<th>LOW</th>
+<th>VOLUME</th>
+<th>OPEN_INT</th>
+
 </tr>";
 while($row = mysqli_fetch_array($result)) {
     echo "<tr>";
-    echo "<td>" . $row['FirstName'] . "</td>";
-    echo "<td>" . $row['LastName'] . "</td>";
-    echo "<td>" . $row['Age'] . "</td>";
-    echo "<td>" . $row['Hometown'] . "</td>";
-    echo "<td>" . $row['Job'] . "</td>";
+    echo "<td>" . $row['DATE'] . "</td>";
+    echo "<td>" . $row['ID'] . "</td>";
+    echo "<td>" . $row['COMMODITY'] . "</td>";
+    echo "<td>" . $row['SETTLEMENT'] . "</td>";
+    echo "<td>" . $row['HIGH'] . "</td>";
+    echo "<td>" . $row['LOW'] . "</td>";
+    echo "<td>" . $row['VOLUME'] . "</td>";
+    echo "<td>" . $row['OPEN_INT'] . "</td>";
     echo "</tr>";
 }
 echo "</table>";

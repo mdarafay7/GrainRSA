@@ -14,10 +14,10 @@ import automata as auto
 import time
 import random
 
-headers = {'User-Agent':'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50'}
+headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
 
 
-db = pymysql.connect(host="localhost",user="root",password="Test123$",db="TESTDB" )
+db = pymysql.connect(host="localhost",user="root",password="test123",db="TESTDB" )
 today = date.today()
 #("Today's date:", today)
 #()
@@ -43,7 +43,7 @@ sql = """CREATE TABLE SAFEX_INFORMATION (
 
 cursor.execute(sql)
 
-inBook = open_workbook('/home/mohammed/Documents/pythonproj/scraping/SAFEX.xls',formatting_info=True)
+inBook = open_workbook('/home/abdo/Documents/GrainRSA/SAFEX.xls',formatting_info=True)
 
 outBook = xlutils.copy.copy(inBook)
 sheetsCount=inBook.nsheets
@@ -59,7 +59,11 @@ for i in range(12,day_minus):
 day_range=[]
 day_plus=int(todays_day)+1
 
-for i in range(12,day_plus):
+todays_month=int(todays_month)-1
+todays_month="0"+str(todays_month)
+print(todays_month)
+
+for i in range(12,20):
     print(i)
     response = requests.get('https://www.jse.co.za/downloadable-files?RequestNode=/Safex/agriculture.stats/2019')
     soup=bs.BeautifulSoup(response.text,'html.parser')
@@ -69,16 +73,26 @@ for i in range(12,day_plus):
         day_range.append(i)
 
 
+print(day_range)
+
 for i in day_range:
-    if(i==18):
-        time.sleep(25)
-    time.sleep(1+random.randint(1,10))
+    print("trip pause")
+    # if(i==18):
+    #     time.sleep(20)
+    # if(i==17):
+    #     time.sleep(13)
+    #time.sleep(1+random.randint(1,10))
     url = 'https://www.jse.co.za/_layouts/15/DownloadHandler.ashx?FileName=/Safex/agriculture.stats/2019/AGR'+todays_month+str(i)+'.xls'
+    print(url)
     print('getting')
     print(i)
-    urllib.request.urlretrieve(url, '/home/mohammed/Documents/pythonproj/scraping/'+todays_month+str(i)+'.xls')
-    print('todays_month'+str(i)+'.xls')
-    loc=('/home/mohammed/Documents/pythonproj/scraping/'+todays_month+str(i)+'.xls')
+    # try:
+    #     urllib.request.urlretrieve(url,'/home/abdo/Documents/GrainRSA/'+todays_month+str(i)+'.xls')
+    #
+    # except:
+    #     urllib.request.urlretrieve(url,'/home/abdo/Documents/GrainRSA/'+todays_month+str(i)+'.xls')
+    # print('todays_month'+str(i)+'.xls')
+    loc=('/home/abdo/Documents/GrainRSA/'+todays_month+str(i)+'.xls')
     print(i)
     SAFEX_CONTRACT=xlrd.open_workbook(loc)
     SAFEX_SHEET=SAFEX_CONTRACT.sheet_by_index(0)
@@ -91,4 +105,4 @@ for i in day_range:
 
 
 
-outBook.save('/home/mohammed/Documents/pythonproj/scraping/SAFEX2.xls')
+outBook.save('/home/abdo/Documents/GrainRSA/SAFEX2.xls')

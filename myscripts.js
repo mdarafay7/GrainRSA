@@ -27,7 +27,7 @@ function myFunction2(element) {
           }
       };
 
-      xmlhttp.open("GET","localhost/getdata.php"+str,true);
+      xmlhttp.open("GET","localhost/getUser.php",true);
       xmlhttp.send();
   }
 }
