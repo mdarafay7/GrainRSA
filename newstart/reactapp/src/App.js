@@ -10,19 +10,14 @@ import {ButtonToolbar} from 'react-bootstrap';
 import {ButtonGroup} from 'react-bootstrap';
 import {DropdownButton} from 'react-bootstrap';
 import {Dropdown} from 'react-bootstrap';
-import DateRangePicker from 'react-daterange-picker'
-import 'react-daterange-picker/dist/css/react-calendar.css' // For some basic styling. (OPTIONAL)
-function background() {
-  return (
-    <div
-      style={{
-        backgroundColor: 'blue',
-        width: '100px',
-        height: '100px'
-      }}
-    />
-  );
-}
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+
+
+
+
 
 class App extends Component {
 shoot()
@@ -60,45 +55,128 @@ class Test extends React.Component {
   }
 }
 
-class Football extends React.Component {
-  shoot() {
-    alert("Great Shot!");
-  }
-  render() {
-    return (
-      <button onClick={this.shoot}>Take the shot!</button>
-    );
-  }
-}
+
+
 
 class DateComm extends React.Component {
+
+
   state = {
-   dates: null
+  startDate: new Date()
+};
+
+handleChange = date => {
+  console.log(moment(date).format('YYYY-MM-DD'));
+  var dates=moment(date).format('YYYY-MM-DD');
+  return dates;
+};
+
+ print(comm){
+   ReactDOM.render(<Select value={comm}/>, document.getElementById('root'));
+
  }
 
- onSelect = dates => this.setState({dates})
   render() {
 
     return (
       <div>
       <DropdownButton id="dropdown-basic-button" title="Select Commodity">
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+        <Dropdown.Item onClick={() => this.print("YM")}>Action</Dropdown.Item>
         <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
         <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
       </DropdownButton>
       <div id="dateBox">
-      <DateRangePicker
-         onSelect={this.onSelect}
-         value={this.state.dates}
-       />
+      <DatePicker
+  selected={this.state.date}
+  onSelect={this.handleSelect} //when day is clicked
+  onChange={this.handleChange} //only when value has changed
+  />
+
        </div>
+
+
+       <Button onClick={this.print}>Click ME</Button>
 
       </div>
 
+    );
+  }
 
+
+}
+
+class Select extends React.Component {
+
+
+
+
+  state={
+    information: []
+  }
+  componentDidMount(){
+    this.getInformation();
+
+  }
+  getInformation= _ =>{
+
+      fetch('http://localhost:4000/select_custom?comm='+this.props.value)
+        .then(response=>response.json())
+        .then(response=>this.setState({information: response.data}))
+        .catch(err=>console.error(err))
+  }
+
+
+
+
+
+
+
+
+  renderInformation=({DATE,ID,COMMODITY,SETTLEMENT,HIGH,LOW,VOL,OPEN_INT})=><div key={DATE}>{ID}>{COMMODITY}>{SETTLEMENT}>{HIGH}>{LOW}>{VOL}>{OPEN_INT}</div>
+  render(){
+
+    const {information}=this.state;
+    return(
+
+
+      <div className="container">
+
+              <div className="panel panel-default p50 uth-panel">
+                  <table className="table table-hover">
+                      <thead>
+                          <tr>
+                              <th>Date</th>
+                              <th>ID</th>
+                              <th>Commodity</th>
+                              <th>Settlement</th>
+                              <th>High</th>
+                              <th>Low</th>
+                              <th>Vol</th>
+                              <th>OPEN_INT</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      {this.state.information.map(renderInformation=>
+                          <tr key={renderInformation.id}>
+                          <td>{renderInformation.DATE} </td>
+                          <td>{renderInformation.ID}</td>
+                          <td>{renderInformation.COMMODITY}</td>
+                          <td>{renderInformation.SETTLEMENT}</td>
+                          <td>{renderInformation.HIGH}</td>
+                          <td>{renderInformation.LOW}</td>
+                          <td>{renderInformation.VOL}</td>
+                          <td>{renderInformation.OPEN_INT}</td>
+                          </tr>
+                      )}
+                      </tbody>
+                  </table>
+              </div>
+
+          </div>
     );
   }
 }
+
 
 
 

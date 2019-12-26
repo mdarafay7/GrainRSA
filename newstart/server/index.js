@@ -23,7 +23,7 @@ app.get('/',(req,res)=>{
   res.send('go to other urls to see other stuff')
 });
 
-app.get('/products',(req,res)=>{
+app.get('/select_all',(req,res)=>{
   connection.query(SELECT_ALL_QUERY,(err,results)=>{
     if(err){
       return res.send(err);
@@ -36,6 +36,25 @@ app.get('/products',(req,res)=>{
   });
 
 });
+
+
+app.get('/select_custom',(req,res)=>{
+const{comm}=req.query;
+let selectQuery = 'SELECT * FROM ?? WHERE ?? = ?';
+let SELECT_CUSTOM_QUERY = mysql.format(selectQuery,["SAFEX_INFORMATION","COMMODITY", comm])
+console.log(comm);
+connection.query(SELECT_CUSTOM_QUERY,(err,results)=>{
+  if(err){
+    return res.send(err);
+  }
+  else{
+    return res.json({
+      data:results
+    })
+  }
+});
+});
+
 app.listen(4000,()=>{
   console.log('Server listning on port 4000')
 });
