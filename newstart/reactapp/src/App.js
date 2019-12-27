@@ -22,7 +22,7 @@ import moment from "moment";
 class App extends Component {
 shoot()
 {
-  ReactDOM.render(<DateComm />, document.getElementById('root'));
+  ReactDOM.render(<DateComm/>, document.getElementById('root'));
 
 }
 
@@ -57,22 +57,34 @@ class Test extends React.Component {
 
 
 
-
 class DateComm extends React.Component {
 
 
-  state = {
-  startDate: new Date()
-};
 
-handleChange = date => {
-  console.log(moment(date).format('YYYY-MM-DD'));
+constructor(props)
+{
+  super();
+  this.state={
+    startDate: new Date(),
+    datex: "AS"
+
+
+  };
+}
+
+
+handleChange(date) {
+
   var dates=moment(date).format('YYYY-MM-DD');
-  return dates;
+  this.setState({startDate: dates});
+
 };
 
- print(comm){
-   ReactDOM.render(<Select value={comm}/>, document.getElementById('root'));
+
+
+ print(comm,date){
+
+   ReactDOM.render(<Select value={comm} val={date}/>, document.getElementById('root'));
 
  }
 
@@ -89,13 +101,13 @@ handleChange = date => {
       <DatePicker
   selected={this.state.date}
   onSelect={this.handleSelect} //when day is clicked
-  onChange={this.handleChange} //only when value has changed
+  onChange={startDate => this.handleChange(startDate)}
   />
 
        </div>
 
 
-       <Button onClick={this.print}>Click ME</Button>
+       <button onClick={() => { this.print("YM",this.state.startDate)}}>ClickME</button>
 
       </div>
 
@@ -106,19 +118,21 @@ handleChange = date => {
 }
 
 class Select extends React.Component {
+constructor(){
+  super();
+  this.state={
+    information: [],
+  };
+}
 
 
 
-
-  state={
-    information: []
-  }
   componentDidMount(){
     this.getInformation();
 
   }
   getInformation= _ =>{
-
+    console.log(this.props.val);
       fetch('http://localhost:4000/select_custom?comm='+this.props.value)
         .then(response=>response.json())
         .then(response=>this.setState({information: response.data}))
@@ -129,12 +143,8 @@ class Select extends React.Component {
 
 
 
-
-
-
   renderInformation=({DATE,ID,COMMODITY,SETTLEMENT,HIGH,LOW,VOL,OPEN_INT})=><div key={DATE}>{ID}>{COMMODITY}>{SETTLEMENT}>{HIGH}>{LOW}>{VOL}>{OPEN_INT}</div>
   render(){
-
     const {information}=this.state;
     return(
 
@@ -170,6 +180,7 @@ class Select extends React.Component {
                       )}
                       </tbody>
                   </table>
+
               </div>
 
           </div>
