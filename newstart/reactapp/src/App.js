@@ -66,26 +66,51 @@ constructor(props)
   super();
   this.state={
     startDate: new Date(),
-    datex: "AS"
-
+    endDate: new Date(),
+    datex: "AS",
+    commodity:'none',
+    startDatetoggle:false,
+    endDatetoggle:false
 
   };
 }
 
 
-handleChange(date) {
+handleChange1(date) {
 
   var dates=moment(date).format('YYYY-MM-DD');
   this.setState({startDate: dates});
+  this.setState({startDatetoggle: true});
+
+
+};
+
+handleChange2(date) {
+
+  var dates=moment(date).format('YYYY-MM-DD');
+  this.setState({endDate: dates});
+  this.setState({endDatetoggle: true});
+
+
+};
+setComm(comm_type) {
+
+  this.setState({commodity: comm_type});
 
 };
 
 
 
- print(comm,date){
+ print(comm,date,date2){
+   console.log(date);
+   if(!this.state.endDatetoggle)
+   {
+     ReactDOM.render(<Select comm={this.state.commodity} date={date} date2={"none"}/>, document.getElementById('root'));
 
-   ReactDOM.render(<Select value={comm} val={date}/>, document.getElementById('root'));
-
+   }
+   else{
+   ReactDOM.render(<Select comm={this.state.commodity} date={date} date2={date2}/>, document.getElementById('root'));
+}
  }
 
   render() {
@@ -93,21 +118,25 @@ handleChange(date) {
     return (
       <div>
       <DropdownButton id="dropdown-basic-button" title="Select Commodity">
-        <Dropdown.Item onClick={() => this.print("YM")}>Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        <Dropdown.Item onClick={() => this.setComm("YM")}>YM</Dropdown.Item>
+        <Dropdown.Item onClick={() => this.setComm("WM")}>WM</Dropdown.Item>
+        <Dropdown.Item onClick={() => this.setComm("SUN")}>Something else</Dropdown.Item>
       </DropdownButton>
       <div id="dateBox">
       <DatePicker
   selected={this.state.date}
   onSelect={this.handleSelect} //when day is clicked
-  onChange={startDate => this.handleChange(startDate)}
+  onChange={startDate => this.handleChange1(startDate)}
   />
-
+  <DatePicker
+selected={this.state.date}
+onSelect={this.handleSelect} //when day is clicked
+onChange={endDate => this.handleChange2(endDate)}
+/>
        </div>
 
 
-       <button onClick={() => { this.print("YM",this.state.startDate)}}>ClickME</button>
+       <button onClick={() => { this.print("YM",this.state.startDate,this.state.endDate)}}>ClickME</button>
 
       </div>
 
@@ -132,11 +161,21 @@ constructor(){
 
   }
   getInformation= _ =>{
+    if(this.props.date2=="none")
+    {
+      console.log(this.props.val);
+        fetch('http://localhost:4000/select_date?date='+this.props.date+"&comm="+this.props.comm)
+          .then(response=>response.json())
+          .then(response=>this.setState({information: response.data}))
+          .catch(err=>console.error(err))
+    }
+    else{
     console.log(this.props.val);
-      fetch('http://localhost:4000/select_custom?comm='+this.props.value)
+      fetch('http://localhost:4000/select_range?date='+this.props.date+"&comm="+this.props.comm+"&date2="+this.props.date2)
         .then(response=>response.json())
         .then(response=>this.setState({information: response.data}))
         .catch(err=>console.error(err))
+      }
   }
 
 

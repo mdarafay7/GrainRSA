@@ -38,10 +38,28 @@ app.get('/select_all',(req,res)=>{
 });
 
 
-app.get('/select_custom',(req,res)=>{
-const{comm}=req.query;
-let selectQuery = 'SELECT * FROM ?? WHERE ?? = ?';
-let SELECT_CUSTOM_QUERY = mysql.format(selectQuery,["SAFEX_INFORMATION","COMMODITY", comm])
+app.get('/select_range',(req,res)=>{
+const{comm,date,date2}=req.query;
+let selectQuery = 'SELECT * FROM ?? WHERE ?? = ? AND ?? BETWEEN ? AND ?';
+let SELECT_CUSTOM_QUERY = mysql.format(selectQuery,["SAFEX_INFORMATION","COMMODITY",comm,"DATE",date,date2])
+console.log(comm);
+connection.query(SELECT_CUSTOM_QUERY,(err,results)=>{
+  if(err){
+    return res.send(err);
+  }
+  else{
+    return res.json({
+      data:results
+    })
+  }
+});
+});
+
+
+app.get('/select_date',(req,res)=>{
+const{comm,date}=req.query;
+let selectQuery = 'SELECT * FROM ?? WHERE ?? = ? AND ?? = ?';
+let SELECT_CUSTOM_QUERY = mysql.format(selectQuery,["SAFEX_INFORMATION","COMMODITY",comm,"DATE",date])
 console.log(comm);
 connection.query(SELECT_CUSTOM_QUERY,(err,results)=>{
   if(err){
